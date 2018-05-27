@@ -2,6 +2,8 @@ package cn.demonk.initflow;
 
 import android.text.TextUtils;
 
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +55,8 @@ public class InitTaskFlowTest {
     @Test
     public void run() throws Exception {
         TestClass testObj = new TestClass();
-        InitTaskFlow.instance().run(testObj, TestClass.EIGHT);
+        TaskResult result=InitTaskFlow.instance().run(testObj, TestClass.EIGHT);
+        Assert.assertTrue(result.get());
     }
 
 }

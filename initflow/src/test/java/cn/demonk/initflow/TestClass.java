@@ -52,7 +52,7 @@ public class TestClass {
     })
     public boolean setp5() {
         System.out.println(FIVE);
-        return true;
+        return false;
     }
 
     @Task(name = SIX, depends = {
@@ -74,7 +74,8 @@ public class TestClass {
     @Task(name = EIGHT, depends = {
             @DependencyDesp(name = FOUR, priority = Task.TaskPriority.KEY),
             @DependencyDesp(name = SEVEN, priority = Task.TaskPriority.KEY),
-            @DependencyDesp(name = SIX, priority = Task.TaskPriority.KEY)
+            @DependencyDesp(name = SIX, priority = Task.TaskPriority.KEY),
+            @DependencyDesp(name = FIVE)
     })
     public boolean setp8() {
         System.out.println(EIGHT);

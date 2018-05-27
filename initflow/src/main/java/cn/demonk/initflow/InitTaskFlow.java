@@ -28,9 +28,9 @@ public class InitTaskFlow {
      *
      * @param obj
      */
-    public void run(Object obj, String tail) {
+    public TaskResult run(Object obj, String tail) {
         if (obj == null)
-            return;
+            return TaskResult.makeFaileResule();
 
         TaskLinkBuilder builder =
                 new ReflectionBuilder()
@@ -38,7 +38,7 @@ public class InitTaskFlow {
                         .tail(tail);
 
         InitTask startPoint = builder.build();
-        startPoint.taskRun();
+        return startPoint.taskRun();
     }
 
     private class ReflectionBuilder implements TaskLinkBuilder {

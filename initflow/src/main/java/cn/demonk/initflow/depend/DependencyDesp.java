@@ -9,5 +9,5 @@ import cn.demonk.initflow.Task;
 public @interface DependencyDesp {
     String name();
 
-    Task.TaskPriority priority() default Task.TaskPriority.KEY;
+    Task.TaskPriority priority() default Task.TaskPriority.NORMAL;
 }
