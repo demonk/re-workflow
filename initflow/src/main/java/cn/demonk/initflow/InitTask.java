@@ -34,7 +34,8 @@ public abstract class InitTask {
         boolean keySucc = true;
         for (Dependency depend : mDepends) {
             L.d(this.mName + " --> " + depend.getName());
-            boolean result = depend.get().get();
+
+            boolean result = depend.get().get();//如果运行于非当前线程，则会直接返回假结果
 
             if (Task.TaskPriority.KEY == depend.getPriority()) {
                 keySucc = keySucc && result;
@@ -45,7 +46,6 @@ public abstract class InitTask {
         }
 
         if (keySucc) {
-            L.d("running: " + this.mName);
             return exec();
         }
 

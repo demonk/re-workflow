@@ -10,6 +10,7 @@ import cn.demonk.initflow.Task;
 import cn.demonk.initflow.TaskPool;
 import cn.demonk.initflow.TaskResult;
 import cn.demonk.initflow.ThreadMode;
+import cn.demonk.initflow.utils.L;
 import cn.demonk.initflow.utils.ReflectionUtils;
 
 /**
@@ -41,6 +42,7 @@ public class InitTaskByMethod extends InitTask {
         }
 
         //FIXME 多线程问题
+        final long startTime=System.currentTimeMillis();
         Future<Boolean> task = null;
         if (ThreadMode.POSTING == this.mThreadMode) {
             task = syncInvoke();
@@ -48,7 +50,9 @@ public class InitTaskByMethod extends InitTask {
             task = asyncinvoke();
         }
 
-        return mResult = new TaskResult(task);
+        L.d("running: " + this.getName() + ",sync=" + (ThreadMode.POSTING == this.mThreadMode) + ",time=" + (System.currentTimeMillis() - startTime));
+
+        return mResult = new TaskResult(this,task);
     }
 
     private Future<Boolean> syncInvoke() {

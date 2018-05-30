@@ -10,8 +10,10 @@ import java.util.concurrent.Future;
 public class TaskResult {
 
     private Future<Boolean> mTask;
+    private InitTask mInitTask;
 
-    public TaskResult(Future<Boolean> task) {
+    public TaskResult(InitTask initTask, Future<Boolean> task) {
+        this.mInitTask = initTask;
         this.mTask = task;
     }
 
@@ -23,6 +25,15 @@ public class TaskResult {
     }
 
     public boolean get() {
+        if (isDone() ||
+                mInitTask.mThreadMode == ThreadMode.POSTING) {
+            return syncGet();
+        }
+        //当任务处于非当前线程运行时，表示结果不关注，直接返回成功
+        return true;
+    }
+
+    public boolean syncGet() {
         try {
             return mTask.get();
         } catch (InterruptedException e) {

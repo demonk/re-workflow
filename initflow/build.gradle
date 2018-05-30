@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: "maven-publish"
+apply plugin: "maven"
 
 android {
     compileSdkVersion 25
@@ -21,12 +23,37 @@ android {
     }
 }
 
+def snapshotUrl = buildscript.repositories.mavenLocal().url
+group = 'cn.demonk'
+version = '0.0.14-SNAPSHOT'
+description = """"""
+
+publishing {
+    publications {
+
+        repositories.maven {
+            credentials {
+                username ""
+                password ""
+            }
+
+            url snapshotUrl
+        }
+
+        maven(MavenPublication) {
+            artifacts {
+                artifact source: file("build/outputs/aar/${project.name}-release.aar"), extension: 'aar', builtBy: tasks['assembleRelease']
+                artifactId "init-flow"
+            }
+        }
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 
     testCompile 'org.robolectric:robolectric:3.+'
