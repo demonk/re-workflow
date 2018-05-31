@@ -1,8 +1,13 @@
-package cn.demonk.initflow;
+package cn.demonk.initflow.task;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.demonk.initflow.task.depend.Dependency;
+import cn.demonk.initflow.task.depend.Task;
+import cn.demonk.initflow.task.result.TaskResult;
+import cn.demonk.initflow.task.result.FutureTaskResult;
+import cn.demonk.initflow.thread.ThreadMode;
 import cn.demonk.initflow.utils.L;
 
 /**
@@ -30,31 +35,31 @@ public abstract class InitTask {
         return this;
     }
 
-    public TaskResult taskRun() {
+    public FutureTaskResult taskRun() {
         boolean keySucc = true;
         for (Dependency depend : mDepends) {
             L.d(this.mName + " --> " + depend.getName());
 
-            boolean result = depend.get().get();//如果运行于非当前线程，则会直接返回假结果
+            TaskResult taskResult = depend.get();//如果运行于非当前线程，则会直接返回假结果
 
             if (Task.TaskPriority.KEY == depend.getPriority()) {
-                keySucc = keySucc && result;
+                keySucc = keySucc && taskResult.isSucc();
                 if (!keySucc) {
-                    break;
+                    //关键流程失败，直接返回结果
+                    return FutureTaskResult.makeFailedResult(taskResult.getCode(), taskResult.getMessage());
                 }
             }
         }
-
-        if (keySucc) {
-            return exec();
-        }
-
-        return TaskResult.makeFaileResule();
+        return exec();
     }
 
     public final String getName() {
         return mName;
     }
 
-    public abstract TaskResult exec();
+    public final ThreadMode getThreadMode() {
+        return this.mThreadMode;
+    }
+
+    public abstract FutureTaskResult exec();
 }

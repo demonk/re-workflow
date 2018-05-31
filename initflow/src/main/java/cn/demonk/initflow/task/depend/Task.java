@@ -1,11 +1,11 @@
-package cn.demonk.initflow;
+package cn.demonk.initflow.task.depend;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import cn.demonk.initflow.depend.DependencyDesp;
+import cn.demonk.initflow.thread.ThreadMode;
 
 /**
  * 注解，定义一个任务的信息

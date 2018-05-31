@@ -455,72 +455,71 @@ public class ReflectionUtils {
 
         return (List<Method>) (list == null ? Collections.emptyList() : list);
     }
-}
 
 
-class TypeUtil {
+    private static class TypeUtil {
 
-    private static final Set<Class<?>> PRIMITIVE_TYPES = new HashSet<Class<?>>();
+        private static final Set<Class<?>> PRIMITIVE_TYPES = new HashSet<Class<?>>();
 
-    static {
-        PRIMITIVE_TYPES.add(int.class);
-        PRIMITIVE_TYPES.add(Integer.class);
+        static {
+            PRIMITIVE_TYPES.add(int.class);
+            PRIMITIVE_TYPES.add(Integer.class);
 
-        PRIMITIVE_TYPES.add(short.class);
-        PRIMITIVE_TYPES.add(Short.class);
+            PRIMITIVE_TYPES.add(short.class);
+            PRIMITIVE_TYPES.add(Short.class);
 
-        PRIMITIVE_TYPES.add(long.class);
-        PRIMITIVE_TYPES.add(Long.class);
+            PRIMITIVE_TYPES.add(long.class);
+            PRIMITIVE_TYPES.add(Long.class);
 
-        PRIMITIVE_TYPES.add(float.class);
-        PRIMITIVE_TYPES.add(Float.class);
+            PRIMITIVE_TYPES.add(float.class);
+            PRIMITIVE_TYPES.add(Float.class);
 
-        PRIMITIVE_TYPES.add(double.class);
-        PRIMITIVE_TYPES.add(Double.class);
+            PRIMITIVE_TYPES.add(double.class);
+            PRIMITIVE_TYPES.add(Double.class);
 
-        PRIMITIVE_TYPES.add(byte.class);
-        PRIMITIVE_TYPES.add(Byte.class);
+            PRIMITIVE_TYPES.add(byte.class);
+            PRIMITIVE_TYPES.add(Byte.class);
 
-        PRIMITIVE_TYPES.add(boolean.class);
-        PRIMITIVE_TYPES.add(Boolean.class);
+            PRIMITIVE_TYPES.add(boolean.class);
+            PRIMITIVE_TYPES.add(Boolean.class);
 
-        PRIMITIVE_TYPES.add(byte.class);
-        PRIMITIVE_TYPES.add(Byte.class);
+            PRIMITIVE_TYPES.add(byte.class);
+            PRIMITIVE_TYPES.add(Byte.class);
 
-        PRIMITIVE_TYPES.add(char.class);
-        PRIMITIVE_TYPES.add(Character.class);
-    }
-
-    public static boolean isPrimitive(Class<?> target) {
-        return PRIMITIVE_TYPES.contains(target);
-    }
-
-    public static boolean isPrimitiveOrString(Class<?> target) {
-        if (String.class.isAssignableFrom(target)) {
-            return true;
+            PRIMITIVE_TYPES.add(char.class);
+            PRIMITIVE_TYPES.add(Character.class);
         }
 
-        return isPrimitive(target);
-    }
-
-    public static boolean isArrayOrContainer(Class<?> target) {
-        if (target.isArray()) {
-            return true;
+        public static boolean isPrimitive(Class<?> target) {
+            return PRIMITIVE_TYPES.contains(target);
         }
 
-        if (List.class.isAssignableFrom(target) || Map.class.isAssignableFrom(target)) {
-            return true;
+        public static boolean isPrimitiveOrString(Class<?> target) {
+            if (String.class.isAssignableFrom(target)) {
+                return true;
+            }
+
+            return isPrimitive(target);
         }
 
-        return false;
-    }
+        public static boolean isArrayOrContainer(Class<?> target) {
+            if (target.isArray()) {
+                return true;
+            }
 
-    public static boolean isAssignable(Class<?> target, Class<?> source) {
-        if (target == Object.class || target.isAssignableFrom(source)) {
-            return true;
+            if (List.class.isAssignableFrom(target) || Map.class.isAssignableFrom(target)) {
+                return true;
+            }
+
+            return false;
         }
 
-        return (TypeUtil.isPrimitive(target) && TypeUtil.isPrimitive(source));
-    }
+        public static boolean isAssignable(Class<?> target, Class<?> source) {
+            if (target == Object.class || target.isAssignableFrom(source)) {
+                return true;
+            }
 
+            return (TypeUtil.isPrimitive(target) && TypeUtil.isPrimitive(source));
+        }
+    }
 }

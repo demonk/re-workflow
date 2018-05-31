@@ -1,4 +1,4 @@
-package cn.demonk.initflow;
+package cn.demonk.initflow.thread;
 
 /**
  * Created by ligs on 8/6/17.

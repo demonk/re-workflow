@@ -5,15 +5,16 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import cn.demonk.initflow.InitTask;
-import cn.demonk.initflow.Task;
-import cn.demonk.initflow.TaskPool;
-import cn.demonk.initflow.TaskResult;
-import cn.demonk.initflow.ThreadMode;
+import cn.demonk.initflow.task.depend.Task;
+import cn.demonk.initflow.task.result.FutureTaskResult;
+import cn.demonk.initflow.task.result.TaskResult;
+import cn.demonk.initflow.thread.TaskPool;
+import cn.demonk.initflow.thread.ThreadMode;
 import cn.demonk.initflow.utils.L;
 import cn.demonk.initflow.utils.ReflectionUtils;
 
 /**
+ * exec task by reflecting method
  * Created by ligs on 8/6/17.
  */
 
@@ -22,7 +23,7 @@ public class InitTaskByMethod extends InitTask {
     private Method mMethod;
     private Object mAttachObj;
     private Task mTask;
-    private TaskResult mResult;
+    private FutureTaskResult mResult;
 
     public InitTaskByMethod(Object attachObj, Task task, Method method) {
         super(task.name(), task.threadMode());
@@ -36,14 +37,14 @@ public class InitTaskByMethod extends InitTask {
     }
 
     @Override
-    public TaskResult exec() {
+    public FutureTaskResult exec() {
         if (mResult != null) {
             return mResult;
         }
 
-        //FIXME 多线程问题
-        final long startTime=System.currentTimeMillis();
-        Future<Boolean> task = null;
+        //FIXME 多线程问题,mResult未创建好，下一个也进来了，但一般不会出现这情况
+        final long startTime = System.currentTimeMillis();
+        Future<TaskResult> task = null;
         if (ThreadMode.POSTING == this.mThreadMode) {
             task = syncInvoke();
         } else if (ThreadMode.ASYNC == this.mThreadMode) {
@@ -52,26 +53,28 @@ public class InitTaskByMethod extends InitTask {
 
         L.d("running: " + this.getName() + ",sync=" + (ThreadMode.POSTING == this.mThreadMode) + ",time=" + (System.currentTimeMillis() - startTime));
 
-        return mResult = new TaskResult(this,task);
+        return mResult = new FutureTaskResult(this, task);
     }
 
-    private Future<Boolean> syncInvoke() {
-        Object object = ReflectionUtils.invoke(mAttachObj, mMethod, null);
-        final boolean ret = object instanceof Boolean && (boolean) object;
-        FutureTask<Boolean> task = new FutureTask<>(new Callable<Boolean>() {
+    private Future<TaskResult> syncInvoke() {
+        final Object result = ReflectionUtils.invoke(mAttachObj, mMethod, null);
+        FutureTask<TaskResult> task = new FutureTask<>(new Callable<TaskResult>() {
             @Override
-            public Boolean call() throws Exception {
-                return ret;
+            public TaskResult call() throws Exception {
+                if (result instanceof TaskResult) {
+                    return (TaskResult) result;
+                }
+                return TaskResult.makeFailedResult(-1, "method type error");
             }
         });
         task.run();
         return task;
     }
 
-    private Future<Boolean> asyncinvoke() {
-        return TaskPool.submit(new Callable<Boolean>() {
+    private Future<TaskResult> asyncinvoke() {
+        return TaskPool.submit(new Callable<TaskResult>() {
             @Override
-            public Boolean call() throws Exception {
+            public TaskResult call() throws Exception {
                 return syncInvoke().get();
             }
         });

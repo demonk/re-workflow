@@ -1,6 +1,8 @@
 package cn.demonk.initflow;
 
-import cn.demonk.initflow.depend.DependencyDesp;
+import cn.demonk.initflow.task.depend.DependencyDesp;
+import cn.demonk.initflow.task.depend.Task;
+import cn.demonk.initflow.task.result.TaskResult;
 
 /**
  * Created by ligs on 8/10/17.
@@ -18,57 +20,57 @@ public class TestClass {
     public static final String EIGHT = "step_8";
 
     @Task(name = ONE)
-    public boolean setp1() {
+    public TaskResult setp1() {
         System.out.println(ONE);
-        return true;
+        return TaskResult.success();
     }
 
     @Task(name = TWO, depends = {
             @DependencyDesp(name = ONE)
     })
-    public boolean setp2() {
+    public TaskResult setp2() {
         System.out.println(TWO);
-        return true;
+        return TaskResult.success();
     }
 
     @Task(name = THREE, depends = {
             @DependencyDesp(name = ONE)
     })
-    public boolean setp3() {
+    public TaskResult setp3() {
         System.out.println(THREE);
-        return true;
+        return TaskResult.success();
     }
 
     @Task(name = FOUR, depends = {
             @DependencyDesp(name = TWO)
     })
-    public boolean setp4() {
+    public TaskResult setp4() {
         System.out.println(FOUR);
-        return true;
+        return TaskResult.success();
     }
 
     @Task(name = FIVE, depends = {
             @DependencyDesp(name = THREE)
     })
-    public boolean setp5() {
+    public TaskResult setp5() {
         System.out.println(FIVE);
-        return false;
+        return TaskResult.makeFailedResult(-2, "failed to exec task 5");
     }
 
     @Task(name = SIX, depends = {
             @DependencyDesp(name = THREE)
     })
-    public boolean setp6() {
+    public TaskResult setp6() {
         System.out.println(SIX);
-        return true;
+        return TaskResult.success();
     }
 
     @Task(name = SEVEN, depends = {
             @DependencyDesp(name = FIVE)
     })
-    public boolean setp7() {
+    public TaskResult setp7() {
         System.out.println(SEVEN);
-        return true;
+        return TaskResult.success();
     }
 
     @Task(name = EIGHT, depends = {
@@ -77,9 +79,9 @@ public class TestClass {
             @DependencyDesp(name = SIX, priority = Task.TaskPriority.KEY),
             @DependencyDesp(name = FIVE)
     })
-    public boolean setp8() {
+    public TaskResult setp8() {
         System.out.println(EIGHT);
-        return true;
+        return TaskResult.success();
     }
 
 }

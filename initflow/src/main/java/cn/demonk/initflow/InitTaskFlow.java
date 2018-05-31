@@ -6,8 +6,13 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.demonk.initflow.depend.DependencyDesp;
+import cn.demonk.initflow.task.depend.DependencyDesp;
+import cn.demonk.initflow.task.depend.Task;
+import cn.demonk.initflow.task.depend.Dependency;
+import cn.demonk.initflow.task.InitTask;
 import cn.demonk.initflow.task.InitTaskByMethod;
+import cn.demonk.initflow.task.TaskLinkBuilder;
+import cn.demonk.initflow.task.result.FutureTaskResult;
 
 /**
  * 流入口
@@ -28,9 +33,10 @@ public class InitTaskFlow {
      *
      * @param obj
      */
-    public TaskResult run(Object obj, String tail) {
-        if (obj == null)
-            return TaskResult.makeFaileResule();
+    public FutureTaskResult run(Object obj, String tail) {
+        if (obj == null) {
+            return FutureTaskResult.makeFailedResult();
+        }
 
         TaskLinkBuilder builder =
                 new ReflectionBuilder()
@@ -73,7 +79,7 @@ public class InitTaskFlow {
         }
 
         private void scanMethods() {
-            Method[] methods = this.mAttachObj.getClass().getDeclaredMethods();//TODO 需要考虑父
+            Method[] methods = this.mAttachObj.getClass().getDeclaredMethods();//TODO 需要考虑父亲
             for (Method method : methods) {
                 Task task = method.getAnnotation(Task.class);
                 if (task == null) {
@@ -104,15 +110,15 @@ public class InitTaskFlow {
             }
         }
 
-//        private String getSignature(Method method) {
-//            StringBuilder sb = new StringBuilder();
-//            sb.append(method.getName());
-//            for (Class paramType : method.getParameterTypes()) {
-//                sb.append(paramType.getName());
-//            }
-//
-//            sb.append(method.getReturnType().getName());
-//            return HashUtil.sha1(sb.toString());
-//        }
+        //        private String getSignature(Method method) {
+        //            StringBuilder sb = new StringBuilder();
+        //            sb.append(method.getName());
+        //            for (Class paramType : method.getParameterTypes()) {
+        //                sb.append(paramType.getName());
+        //            }
+        //
+        //            sb.append(method.getReturnType().getName());
+        //            return HashUtil.sha1(sb.toString());
+        //        }
     }
 }

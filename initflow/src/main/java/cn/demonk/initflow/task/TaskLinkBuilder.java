@@ -1,4 +1,4 @@
-package cn.demonk.initflow;
+package cn.demonk.initflow.task;
 
 /**
  * Created by ligs on 8/6/17.

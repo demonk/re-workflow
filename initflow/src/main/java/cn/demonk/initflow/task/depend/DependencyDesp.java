@@ -1,6 +1,4 @@
-package cn.demonk.initflow.depend;
-
-import cn.demonk.initflow.Task;
+package cn.demonk.initflow.task.depend;
 
 /**
  * Created by ligs on 8/6/17.

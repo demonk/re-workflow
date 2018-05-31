@@ -1,4 +1,7 @@
-package cn.demonk.initflow;
+package cn.demonk.initflow.task.depend;
+
+import cn.demonk.initflow.task.InitTask;
+import cn.demonk.initflow.task.result.TaskResult;
 
 /**
  * Created by ligs on 8/6/17.
@@ -30,7 +33,7 @@ public class Dependency {
      * 获取依赖的任务的执行结果
      */
     public TaskResult get() {
-        return mInitTask.taskRun();
+        return mInitTask.taskRun().get();
     }
 
     public Task.TaskPriority getPriority() {

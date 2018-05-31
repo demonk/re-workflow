@@ -1,4 +1,4 @@
-package cn.demonk.initflow;
+package cn.demonk.initflow.thread;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
